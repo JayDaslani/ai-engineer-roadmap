@@ -11,7 +11,7 @@ print(f"Height: {data['height']}")
 print(f"Weight: {data['weight']}")
 print(f"Type: {data['types'][0]['type']['name']}")
 
-# Stats nikalo
+
 print("\nStats:")
 for stat in data['stats']:
     print(f"  {stat['stat']['name']}: {stat['base_stat']}")
