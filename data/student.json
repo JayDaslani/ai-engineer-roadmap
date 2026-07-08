@@ -1,0 +1,40 @@
+[
+    {
+        "name": "Jay Dasalani",
+        "roll_number": "12",
+        "marks": [
+            {
+                "subject": "Maths",
+                "marks": 90.0
+            },
+            {
+                "subject": "physics",
+                "marks": 80.0
+            },
+            {
+                "subject": "Chemistry",
+                "marks": 79.0
+            }
+        ],
+        "average": 83.0
+    },
+    {
+        "name": "Ravi Rudani",
+        "roll_number": "45",
+        "marks": [
+            {
+                "subject": "Maths",
+                "marks": 99.0
+            },
+            {
+                "subject": "physics",
+                "marks": 90.0
+            },
+            {
+                "subject": "chemistry",
+                "marks": 70.0
+            }
+        ],
+        "average": 86.33
+    }
+]
