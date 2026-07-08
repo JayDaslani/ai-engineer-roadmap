@@ -1,6 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
+from requests.exceptions import ConnectionError, Timeout
 
 load_dotenv()
 
@@ -14,25 +15,29 @@ def get_weather(city):
         "appid": api_key,
         "units": "metric"
     }
+    try:
+       response = requests.get(url, params=params, timeout=5)
 
-    response = requests.get(url, params=params)
+       if response.status_code == 200:
+          data = response.json()
+          print(f"City : {city}")
+          print(f"Temp : {data['main']['temp']}°C")
+          print(f"Humidity : {data['main']['humidity']}%")
+          print(f"Weather : {data['weather'][0]['description']}")
+          print(f"Wind Speed : {data['wind']['speed']}")
 
-    if response.status_code == 200:
-        data = response.json()
-        print(f"City : {city}")
-        print(f"Temp : {data['main']['temp']}°C")
-        print(f"Humidity : {data['main']['humidity']}%")
-        print(f"Weather : {data['weather'][0]['description']}")
-        print(f"Wind Speed : {data['wind']['speed']}")
+       elif response.status_code == 401:
+           print("API key is wrong")
 
-    elif response.status_code == 401:
-        print("API key is wrong")
+       elif response.status_code == 404:
+           print("City is not found!")
 
-    elif response.status_code == 404:
-        print("City is not found!")
+    except ConnectionError:
+        print("Please check your internet")
+
+    except Timeout:
+        print("Server Timeout!")
 
 get_weather("Pune")
 get_weather("Mumbai")
-get_weather("Surat")
-get_weather("Ahmedabad")
-get_weather("delhi")
+get_weather("Surasojdflgit")
