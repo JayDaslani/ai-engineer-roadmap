@@ -11,7 +11,7 @@ journey from Python basics to AI Agents.
 
 ---
 
-### ✅ Phase 1 — Foundation (Complete)
+## ✅ Phase 1 — Foundation (Complete)
 
 #### Python Advanced
 - Classes and Objects
@@ -54,3 +54,38 @@ journey from Python basics to AI Agents.
 - APIs: REST, FastAPI
 - Tools: Git, GitHub, Postman
 ___
+
+## ✅ Phase 2 — LLM Fundamentals (Complete)
+
+#### Part A — LLM Concepts
+- What is Large language models
+- Tokens and Context Window
+- Temperature and Parameters
+- Different Models — Llama, Gemini, GPT
+- LLM Limitations and Hallucination
+
+#### Part B — LLM API (Groq + Llama)
+- First LLM API call
+- System Prompts
+- Conversation History
+- Multi-turn Chat
+- Temperature and Max Tokens experiment
+
+#### Part C — Prompt Engineering
+- Basic Prompting Rules
+- Clear Instructions
+- Few Shot Prompting
+- Chain of Thought
+- JSON Output
+- Role Prompting
+
+## Project
+
+### 🤖 Project: Personal Assistant Chatbot
+
+- **AI-Powered Chatbot:** An intelligent, conversational AI assistant.
+- **Context Aware:** Remembers past interactions and conversation history.
+- **Data Storage:** Saves chat history locally in JSON format.
+- **Session Management:** Ability to load previous chats and seamlessly continue the conversation.
+- **Commands Supported:** `/history`, `/clear`, `/quit`.
+- **Tech Stack:** Python, Groq API, Llama 3.3 70B.
