@@ -1,3 +1,6 @@
+import os
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 import chromadb
 from langchain_huggingface import HuggingFaceEmbeddings
 import os
@@ -17,8 +20,9 @@ collection = client.get_or_create_collection(
     name="my_collection"
 )
 
-print("ChromaDB setup complete!")
+print("✅ ChromaDB setup complete!")
 print(f"Collection: {collection.name}")
+
 
 documents = [
     "Jay is a BTech AI/ML student",
@@ -30,7 +34,9 @@ documents = [
     "The weather in Mumbai is hot"
 ]
 
+
 embeddings = embeddings_model.embed_documents(documents)
+
 
 collection.add(
     documents=documents,
@@ -38,15 +44,13 @@ collection.add(
     ids=[f"doc_{i}" for i in range(len(documents))]
 )
 
-print(f"{len(documents)} documents added")
+print(f"\n✅ {len(documents)} documents added!")
 print(f"Total in DB: {collection.count()}")
 
 
 
 def search(query, top_k=2):
-    
     query_embedding = embeddings_model.embed_query(query)
-    
     
     results = collection.query(
         query_embeddings=[query_embedding],
@@ -67,8 +71,6 @@ def search(query, top_k=2):
 search("Where does Jay live?")
 search("What skills does Jay have?")
 search("What is Jay's goal?")
-
-
 
 print("\n=== Persistence Test ===")
 
