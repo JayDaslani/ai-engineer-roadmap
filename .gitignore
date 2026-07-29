@@ -14,7 +14,6 @@ credentials.json
 # ==========================================
 # Virtual Environments (Nested & Root)
 # ==========================================
-# Catch environments at any directory depth (e.g., Langchain/Part_B_rag/clean_rag_env)
 **/clean_rag_env/
 **/*env/
 **/venv/
@@ -37,13 +36,8 @@ logs/
 .gunicorn/
 
 # ==========================================
-# Data, JSON & File Storage
+# File Storage & Temporary Artifacts
 # ==========================================
-# Ignore local data outputs, JSON logs, and uploaded files anywhere
-*.json
-!package.json
-!tsconfig.json
-
 uploads/
 **/uploads/
 storage/
@@ -53,22 +47,21 @@ files/
 tmp/
 temp/
 *.tmp
-data/
 output/
 
 # ==========================================
-# Vector Databases & Persistence
+# Vector Databases & Persistence Storage
 # ==========================================
-# Local vector store outputs
 chroma/
 **/chroma/
 chroma_db/
-**/chroma_db/
+**/chroma_db*/
+**/rag_db/
 .chroma/
 *.chromadb
 *.sqlite3
-*.db
 faiss_index/
+**/faiss_index/
 .vectorstore/
 
 # ==========================================
@@ -89,7 +82,6 @@ models/
 # ==========================================
 # Python Standard Artifacts
 # ==========================================
-# Byte-compiled / optimized files
 __pycache__/
 **/__pycache__/
 *.py[cod]
@@ -136,22 +128,15 @@ Desktop.ini
 *.swp
 *~
 
-# Virtual Environments (packages & binaries ko ignore karne ke liye)
-clean_rag_env/
-rag_env/
-venv/
-.venv/
+# Ignore JSON files/data
+*.json
 
-# Environment Variables (API keys protect karne ke liye)
-.env
+# Ignore sample pdfs and dataset files
+*.pdf
+*.txt
+!Langchain/data/jay_info.txt
 
-# Vector Databases & Local Stores
-**/chroma_db/
-**/chroma_db2/
-**/rag_db/
-**/faiss_index/
+# Ignore root data folder
+data/
 
-# Python cache & temporary files
-__pycache__/
-*.py[cod]
-.DS_Store
+# Ignore this specific script
