@@ -135,3 +135,23 @@ Desktop.ini
 .idea/
 *.swp
 *~
+
+# Virtual Environments (packages & binaries ko ignore karne ke liye)
+clean_rag_env/
+rag_env/
+venv/
+.venv/
+
+# Environment Variables (API keys protect karne ke liye)
+.env
+
+# Vector Databases & Local Stores
+**/chroma_db/
+**/chroma_db2/
+**/rag_db/
+**/faiss_index/
+
+# Python cache & temporary files
+__pycache__/
+*.py[cod]
+.DS_Store
