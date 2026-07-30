@@ -10,11 +10,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "data"))
+FILE_PATH = os.path.join(DATA_DIR, "jay_detailed.txt")
+DB_DIR = os.path.join(DATA_DIR, "improved_rag_db")
+
 embeddings_model = HuggingFaceEmbeddings(
     model_name='all-MiniLM-L6-v2'
 )
 
-loader = TextLoader("../data/jay_detailed.txt")
+loader = TextLoader(FILE_PATH, encoding="utf-8")
 documents = loader.load()
 
 splitter = RecursiveCharacterTextSplitter(
@@ -26,7 +31,7 @@ chunks = splitter.split_documents(documents)
 vectorestore = Chroma.from_documents(
     documents=chunks,
     embedding=embeddings_model,
-    persist_directory="Langchain/data/improved_rag_db"
+    persist_directory=DB_DIR
 )
 
 llm = ChatGroq(
@@ -82,3 +87,89 @@ def compare_prompts(question):
 
 compare_prompts("Jay ki skills kya hain?")
 compare_prompts("Jay ka favourite food kya hai?")
+
+query_improve_template = ChatPromptTemplate([
+    ("system", """You are a search query optimizer.
+     Take the user's question and convert it into a better search query.
+     
+     RULES:
+     1. Extracted keywords.
+     2. Add synonyms.
+     3. Return ONLY the query. No explantions."""),
+     ("human", "Original query : {query}")
+])
+
+def improved_query_rag(question):
+    print(f"Original : {question}")
+
+    query_chain = query_improve_template | llm | parser
+
+    better_query = query_chain.invoke({
+        "query": question
+    })
+    print(f"Improved : {better_query}")
+
+    docs = retriever.invoke(better_query)
+    context = " ".join([doc.page_content for doc in docs])
+
+    good_chain = good_template | llm | parser
+    answer = good_chain.invoke({
+        "context": context,
+        "question": question
+    })
+    print(f"Answer: {answer}")
+
+improved_query_rag("Jay kahaan hai?")
+improved_query_rag("Jay kya jaanta hai?")
+improved_query_rag("Jay kya karna chahta hai?")
+
+
+print("=== Final Best RAG ===")
+
+def best_rag(question):
+    print(f"Question : {question}")
+
+    query_chain = query_improve_template | llm | parser
+
+    better_query = query_chain.invoke({
+        "query": question
+    })
+
+    docs = retriever.invoke(better_query)
+
+    context_parts = []
+
+    for doc in docs:
+        source = doc.metadata.get(
+            'source', 'document'
+        )
+        context_parts.append(
+            f"[Source: {source}]\n"
+            f"{doc.page_content}"
+        )
+
+    context = " ".join(context_parts)
+
+    good_chain = good_template | llm | parser
+    answer = good_chain.invoke({
+        "context": context,
+        "question": question
+    })
+
+    print(f"Answer : {answer}")
+    return answer
+
+best_rag("Jay ke baare mein batao")
+best_rag("Jay ka future plan kya hai?")
+best_rag("Jay ne kaunsi cheezein seekhi hain?")
+
+print("=== Best RAG chat ===")
+print("'quit' - for chat close")
+
+while True:
+    q = input("You : ")
+    if q.lower() == "quit":
+        print("Bye!")
+        break
+    best_rag(q)
+
