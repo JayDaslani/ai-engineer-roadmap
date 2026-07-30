@@ -8,7 +8,7 @@ from langchain_core.output_parsers import StrOutputParser
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv() 
 
 print("=== Advanced RAG ===")
 loader = TextLoader("../data/jay_detailed.txt")
