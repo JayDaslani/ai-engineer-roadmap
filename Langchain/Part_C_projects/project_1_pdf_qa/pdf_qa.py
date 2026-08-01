@@ -45,7 +45,7 @@ def create_vectorstore(chunks, db_path=None):
             documents=chunks,
             embedding=embeddings_model
         )
-    return vectorestore
+    return vectorstore
 
 llm = ChatGroq(
         model='llama-3.3-70b-versatile',
@@ -107,39 +107,4 @@ def get_answer(question, vectorstore):
 
     sorted_pages = sorted(list(sources))
     return answer, sorted_pages
-
-
-PDF_PATH = "Langchain/Part_C_projects/project_1_pdf_qa/data/basic-economics.pdf"
-
-print("Loading PDF ...")
-docs = load_pdf(PDF_PATH)
-print(f"pages : {len(docs)}")
-
-print("Creating chunks ...")
-chunks = create_chunks(docs)
-print(f"Chunks : {len(chunks)}")
-
-print("Creating Vectorstore...")
-vs = create_vectorstore(
-    chunks,
-    db_path="Langchain/Part_C_projects/project_1_pdf_qa/data/db"
-
-)
-print("Ready!")
-
-# Economics specific questions:
-
-questions = [
-    "What is inflation?",
-    "What is GDP?",
-    "What is market economy?",
-    "What is price mechanism?",
-    "What causes unemployment?"
-]
-
-for q in questions:
-    answer, pages = get_answer(q, vs)
-    print(f"Q: {q}")
-    print(f"A: {answer}")
-    print(f"Pages: {pages}\n")
 
