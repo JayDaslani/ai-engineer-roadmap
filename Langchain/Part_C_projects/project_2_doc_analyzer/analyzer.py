@@ -88,6 +88,7 @@ def create_vectorstore(chunks):
         metadatas=metadatas
     )
     return vectorstore
+
 def generate_summary(documents, llm_instance=llm):
     combined_text = "\n\n".join([f"[Source : {doc.metadata.get('source_file')}]\n{doc.page_content}" for doc in documents[:12]])
 
