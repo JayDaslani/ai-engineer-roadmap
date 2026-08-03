@@ -1,4 +1,3 @@
-# app.py
 
 import streamlit as st
 from analyzer import (
@@ -11,7 +10,7 @@ from analyzer import (
     ask_question
 )
 
-# Page config
+
 st.set_page_config(
     page_title="Document Analyzer",
     page_icon="📊",
@@ -21,7 +20,7 @@ st.set_page_config(
 st.title("📊 Document Analyzer")
 st.write("Multiple documents upload karo aur analyze karo!")
 
-# Session state
+
 if "documents" not in st.session_state:
     st.session_state.documents = None
 if "vectorstore" not in st.session_state:
@@ -35,7 +34,7 @@ if "key_points" not in st.session_state:
 if "comparison" not in st.session_state:
     st.session_state.comparison = None
 
-# Sidebar
+
 with st.sidebar:
     st.header("📁 Documents Upload")
 
@@ -49,20 +48,20 @@ with st.sidebar:
         if st.button("🚀 Process Documents"):
             with st.spinner("Documents process ho rahe hain..."):
 
-                # Load
+                
                 docs = load_documents(uploaded_files)
                 st.session_state.documents = docs
                 st.success(f"✅ {len(docs)} pages loaded!")
 
-                # Chunks
+                
                 chunks = create_chunks(docs)
                 st.success(f"✅ {len(chunks)} chunks!")
 
-                # Vectorstore
+                
                 vs = create_vectorstore(chunks)
                 st.session_state.vectorstore = vs
 
-                # Reset
+                
                 st.session_state.summary = None
                 st.session_state.key_points = None
                 st.session_state.comparison = None
@@ -70,7 +69,7 @@ with st.sidebar:
 
                 st.success("✅ Ready!")
 
-    # Files list
+    
     if st.session_state.documents:
         st.subheader("📄 Loaded Files:")
         files = list(set([
@@ -80,7 +79,7 @@ with st.sidebar:
         for f in files:
             st.write(f"→ {f}")
 
-    # Clear button
+    
     if st.button("🗑️ Clear All"):
         st.session_state.documents = None
         st.session_state.vectorstore = None
@@ -90,12 +89,12 @@ with st.sidebar:
         st.session_state.comparison = None
         st.rerun()
 
-# Main area
+
 if st.session_state.documents is None:
     st.info("👈 Pehle PDFs upload karo aur Process karo")
 
 else:
-    # 4 Tabs
+    
     tab1, tab2, tab3, tab4 = st.tabs([
         "📝 Summary",
         "🎯 Key Points",
@@ -103,7 +102,7 @@ else:
         "💬 Q&A Chat"
     ])
 
-    # Tab 1 — Summary
+    
     with tab1:
         st.header("📝 Document Summary")
 
@@ -117,7 +116,7 @@ else:
         if st.session_state.summary:
             st.write(st.session_state.summary)
 
-    # Tab 2 — Key Points
+    
     with tab2:
         st.header("🎯 Key Points")
 
@@ -131,7 +130,7 @@ else:
         if st.session_state.key_points:
             st.write(st.session_state.key_points)
 
-    # Tab 3 — Compare
+    
     with tab3:
         st.header("⚖️ Document Comparison")
 
@@ -160,11 +159,15 @@ else:
             if st.session_state.comparison:
                 st.write(st.session_state.comparison)
 
-    # Tab 4 — Q&A Chat
+    
     with tab4:
         st.header("💬 Q&A Chat")
 
-        # Chat history
+        question = st.chat_input(
+            "Asking about Documents ..."
+        )
+
+    
         for chat in st.session_state.chat_history:
             with st.chat_message("user"):
                 st.write(chat["question"])
@@ -176,17 +179,12 @@ else:
                         f"{', '.join(chat['sources'])}"
                     )
 
-        # Input
-        question = st.chat_input(
-            "Documents ke baare mein poocho..."
-        )
-
         if question:
             with st.chat_message("user"):
                 st.write(question)
 
             with st.chat_message("assistant"):
-                with st.spinner("Soch raha hoon..."):
+                with st.spinner("Thinking..."):
                     answer, sources = ask_question(
                         question,
                         st.session_state.vectorstore
