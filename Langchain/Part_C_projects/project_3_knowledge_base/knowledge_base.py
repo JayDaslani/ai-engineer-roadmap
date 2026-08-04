@@ -78,7 +78,7 @@ def create_chunks(documents):
     return valid_chunks
 
 
-def get_or_create_vectorstore():
+def get_or_create_vectorstore(force_reload=False):
 
     if os.path.exists(PERSIST_DIR) and len(os.listdir(PERSIST_DIR)) > 0 :
         vectorstore = Chroma(
@@ -136,7 +136,7 @@ def ask_knowledge_base(question: str, vectorstore):
     if vectorstore is None:
         return "Your knowledge base is currently empty.Please add some notes first!", []
     
-    retriever = vectorstore.as_retriever(search_kwargs={'k': 4})
+    retriever = vectorstore.as_retriever(search_kwargs={'k': 6})
     relevent_docs = retriever.invoke(question)
 
     if not relevent_docs:
@@ -146,7 +146,13 @@ def ask_knowledge_base(question: str, vectorstore):
     sources = list(set([doc.metadata.get('source_file', 'Unknown') for doc in relevent_docs]))
 
     prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are the user's personal ai assistant. Provide a detailed and helpful answer to the user's question based on the personal notes/context provided below."),
+        ("system", "Aap user ke expert Personal AI Tutor hain. "
+         "User ke question ka answer niche diye gaye context ke basis par ek **Detailed, Well-Explained, and Comprehensive** tarike se dein.\n\n"
+         "Follow these rules:\n"
+         "1. Concept ko simple aur clear language me explain karein.\n"
+         "2. Bullet points, formulas, aur steps ka use karke detailed response dein.\n"
+         "3. Sirf 1-line answer mat dein, topic ko achhi tarah elaborate karein based on the context.\n"
+         "4. Agar context me info kam hai, jitna hai usko clearly explain karke batayein."),
         ("human", "Context (Personal Notes):\n{context}\n\nQuestion: {question}\n\nAnswer:")
     ])
 
@@ -165,7 +171,19 @@ def generate_quiz(topic: str, vectorstore):
     context = "\n\n".join([doc.page_content for doc in relevent_docs])
 
     prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are a smart tutor. Generate a topic-specific quiz for the user based on the provided notes/context."),
+        ("system", "Aap ek smart tutor hain. Diye gaye notes/context ke basis par user ke liye topic-specific Quiz generate karein.\n\n"
+         "STRICT FORMATTING RULES:\n"
+         "1. Har Question ko ek alag bold header banao (e.g., ### ❓ Question 1: ...)\n"
+         "2. Har option ko bilkul NAYI LINE (new line) par rakho:\n"
+         "   - A) Option text\n"
+         "   - B) Option text\n"
+         "   - C) Option text\n"
+         "   - D) Option text\n"
+         "3. Har Question ke baad ek horizontal line (---) lagao.\n"
+         "4. End me Answer Key ko Expandable ya clear section me rakho:\n"
+         "   ### 💡 Answer Key & Explanations\n"
+         "   1. **B** - Brief explanation\n"
+         "   2. **A** - Brief explanation\n"),
         ("human", "Topic: {topic}\n\nContext Notes:\n{context}\n\nTask: Generate 5 multiple choice question (MCQ) on this topic with options (A,B,C,D) and provide an Answer key at the end.")
     ])
 
