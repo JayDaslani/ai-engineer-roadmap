@@ -128,5 +128,3 @@ while True:
         break
     ask(q)
 
-
-
