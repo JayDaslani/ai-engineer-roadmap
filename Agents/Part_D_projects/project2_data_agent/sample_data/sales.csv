@@ -1,0 +1,13 @@
+Month,Product,Sales,Revenue,Region
+January,Laptop,150,750000,North
+January,Phone,200,400000,South
+February,Laptop,180,900000,North
+February,Phone,220,440000,East
+March,Laptop,200,1000000,West
+March,Phone,250,500000,North
+April,Laptop,170,850000,South
+April,Phone,190,380000,West
+May,Laptop,220,1100000,East
+May,Phone,300,600000,North
+June,Laptop,250,1250000,South
+June,Phone,280,560000,East
